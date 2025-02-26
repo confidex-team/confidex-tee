@@ -38,13 +38,13 @@ cd tappd-simulator-0.1.4-x86_64-linux-musl
 ./tappd-simulator -l unix:/tmp/tappd.sock
 ```
 
-Once the simulator is running, you need to open another terminal to start your Bun development server:
+Once the simulator is running, you need to open another terminal to start your Next.js development server:
 
 ```shell
 yarn dev
 ```
 
-By default, the Bun development server will listen on port 3000. Open http://127.0.0.1:3000/ in your browser and check.
+By default, the Next.js development server will listen on port 3000. Open http://127.0.0.1:3000/ in your browser and check.
 
 This repo also includes code snippets for the following common use cases:
 
