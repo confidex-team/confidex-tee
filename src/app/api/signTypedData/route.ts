@@ -1,9 +1,5 @@
-import {TappdClient} from '@phala/dstack-sdk'
-import 'dotenv/config'
-import { privateKeyToAccount } from 'viem/accounts'
-import {keccak256} from "viem";
-
-const endpoint = process.env.DSTACK_SIMULATOR_ENDPOINT || 'http://localhost:8090'
+import { TappdClient } from '@phala/dstack-sdk'
+import { toViemAccount } from '@phala/dstack-sdk/viem'
 
 const domain = {
   name: 'Ether Mail',
@@ -38,11 +34,9 @@ export async function GET() {
     },
     contents: 'Hello, t/acc!',
   };
-  console.log(endpoint)
-  const client = new TappdClient(endpoint)
-  const testDeriveKey = await client.deriveKey("/", "test");
-  const keccakPrivateKey = keccak256(testDeriveKey.asUint8Array());
-  const account = privateKeyToAccount(keccakPrivateKey);
+  const client = new TappdClient()
+  const testDeriveKey = await client.deriveKey("ethereum");
+  const account = toViemAccount(testDeriveKey);
   console.log(`Account [${account.address}] Signing Typed Message [${message}]`);
   const signature = await account.signTypedData({
     // @ts-ignore

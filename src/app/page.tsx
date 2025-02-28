@@ -1,9 +1,9 @@
 // src/app/page.tsx
 "use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import React, { useState } from 'react';
-import 'dotenv/config';
 import FormData from 'form-data';
 
 function hexToUint8Array(hex: string) {
@@ -39,7 +39,7 @@ async function uploadUint8Array(data: Uint8Array) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const result = await fetch("https://dstack-sim-explorer.vercel.app/api/upload", {
+  const result = await fetch("https://proof.t16z.com/api/upload", {
     method: "POST",
     // @ts-ignore
     body: formData,

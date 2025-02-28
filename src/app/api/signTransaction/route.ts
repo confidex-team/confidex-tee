@@ -1,6 +1,5 @@
-import {TappdClient} from '@phala/dstack-sdk'
-import 'dotenv/config'
-import { privateKeyToAccount } from 'viem/accounts'
+import { TappdClient } from '@phala/dstack-sdk'
+import { toViemAccount } from '@phala/dstack-sdk/viem'
 import {
   keccak256,
   http,
@@ -11,12 +10,9 @@ import {
 import {baseSepolia} from "viem/chains";
 import superjson from 'superjson'
 
-const endpoint = process.env.DSTACK_SIMULATOR_ENDPOINT || 'http://localhost:8090'
-
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  console.log(endpoint)
   const publicClient = createPublicClient({
     chain: baseSepolia,
     transport: http(),
@@ -25,10 +21,9 @@ export async function GET() {
     chain: baseSepolia,
     transport: http(),
   })
-  const client = new TappdClient(endpoint)
-  const testDeriveKey = await client.deriveKey("/", "test");
-  const keccakPrivateKey = keccak256(testDeriveKey.asUint8Array());
-  const account = privateKeyToAccount(keccakPrivateKey);
+  const client = new TappdClient()
+  const testDeriveKey = await client.deriveKey("ethereum");
+  const account = toViemAccount(testDeriveKey);
   const to = '0xC5227Cb20493b97bb02fADb20360fe28F52E2eff';
   const gweiAmount = 420;
   let result = {
