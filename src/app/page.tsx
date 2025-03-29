@@ -95,8 +95,8 @@ export default function Home() {
       <main className={styles.main}>
         <Image
           className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
+          src="https://phala.network/logo.svg"
+          alt="Phala logo"
           width={180}
           height={38}
           priority
@@ -114,8 +114,12 @@ export default function Home() {
             Remote Attestation
           </a>
           <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/account/address')}>
-            TEE Account
+             rel="noopener noreferrer" onClick={() => handleClick('/api/eth_account/address')}>
+            TEE Account: Ethereum Address
+          </a>
+          <a className={styles.primary} target="_blank"
+             rel="noopener noreferrer" onClick={() => handleClick('/api/solana_account/address')}>
+            TEE Account: Solana Address
           </a>
         </div>
 
@@ -137,45 +141,17 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <a
-          href="https://bit.ly/dstack-cheat-sheet"
+          href="https://www.npmjs.com/package/@phala/dstack-sdk"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+          SDK Docs →
         </a>
         <a
-          href="https://docs.phala.network/references/hackathon-guides/ethglobal-sf-hackathon-guide"
+          href="https://github.com/phala-Network/phala-cloud-nextjs-starter"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Guide
-        </a>
-        <a
-          href="https://github.com/Phala-Network/nextjs-viem-dstack-template"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
           Go to Code →
         </a>
       </footer>
