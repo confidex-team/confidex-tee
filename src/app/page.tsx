@@ -72,7 +72,7 @@ export default function Home() {
         response = await fetch(path);
         data = await response.json();
         console.log(JSON.stringify(data));
-        if (path === '/api/remoteAttestation') {
+        if (path === '/api/tdx_quote_raw') {
           const remoteAttestionQuoteHex = data.quote;
           console.log(remoteAttestionQuoteHex);
           const remoteAttestationQuoteU8Array = hexToUint8Array(remoteAttestionQuoteHex);
@@ -110,7 +110,7 @@ export default function Home() {
         </ol>
         <div className={styles.ctas}>
           <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/remoteAttestation')}>
+             rel="noopener noreferrer" onClick={() => handleClick('/api/tdx_quote_raw')}>
             Remote Attestation
           </a>
           <a className={styles.primary} target="_blank"
