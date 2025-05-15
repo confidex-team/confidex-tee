@@ -1,16 +1,16 @@
-import { TappdClient } from '@phala/dstack-sdk'
-import { toViemAccount } from '@phala/dstack-sdk/viem'
+import { TappdClient } from "@phala/dstack-sdk"
+import { toViemAccount } from "@phala/dstack-sdk/viem"
 import {
   keccak256,
   http,
   createPublicClient,
   createWalletClient,
-  parseGwei
-} from 'viem'
-import {baseSepolia} from "viem/chains";
-import superjson from 'superjson'
+  parseGwei,
+} from "viem"
+import { baseSepolia } from "viem/chains"
+import superjson from "superjson"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 export async function GET() {
   const publicClient = createPublicClient({
@@ -22,18 +22,20 @@ export async function GET() {
     transport: http(),
   })
   const client = new TappdClient()
-  const testDeriveKey = await client.deriveKey("ethereum");
-  const account = toViemAccount(testDeriveKey);
-  const to = '0xC5227Cb20493b97bb02fADb20360fe28F52E2eff';
-  const gweiAmount = 420;
+  const testDeriveKey = await client.deriveKey("ethereum")
+  const account = toViemAccount(testDeriveKey)
+  const to = "0xC5227Cb20493b97bb02fADb20360fe28F52E2eff"
+  const gweiAmount = 420
   let result = {
     derivedPublicKey: account.address,
     to,
     gweiAmount,
-    hash: '',
-    receipt: {}
+    hash: "",
+    receipt: {},
   }
-  console.log(`Sending Transaction with Account ${account.address} to ${to} for ${gweiAmount} gwei`)
+  console.log(
+    `Sending Transaction with Account ${account.address} to ${to} for ${gweiAmount} gwei`
+  )
   try {
     // @ts-ignore
     const hash = await walletClient.sendTransaction({
@@ -47,9 +49,9 @@ export async function GET() {
     result.hash = hash
     result.receipt = receipt
   } catch (e) {
-    return Response.json({error: e})
+    return Response.json({ error: e })
   }
-  const { json: jsonResult , meta } = superjson.serialize(result)
+  const { json: jsonResult, meta } = superjson.serialize(result)
 
-  return Response.json({ jsonResult });
+  return Response.json({ jsonResult })
 }
