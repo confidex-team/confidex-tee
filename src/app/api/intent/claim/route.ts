@@ -1,16 +1,26 @@
 import { NextResponse } from 'next/server';
 import { ContractService } from '@/lib/services/contract.service';
 
-const contractService = new ContractService();
+const contractService = ContractService.getInstance();
 
 export async function POST(request: Request) {
   try {
     const { userAddress, token } = await request.json();
     
+    console.debug('Received token claim request', {
+      user: userAddress,
+      token: token
+    });
+    
     const result = await contractService.withdrawTokensWithSignature(
       userAddress,
       token
     );
+    
+    console.debug('Token claim processed', {
+      success: result.success,
+      message: result.message
+    });
     
     return NextResponse.json(result);
   } catch (error) {

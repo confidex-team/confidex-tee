@@ -13,13 +13,19 @@ export interface Intent {
 }
 
 const intentService = new IntentService();
-const contractService = new ContractService();
 
 export async function POST(request: Request) {
   try {
+    console.debug('Received intent submission');
     const intent: Intent = await request.json();
     
     const result = await intentService.submitIntent(intent);
+    
+    console.debug('Intent submission processed', {
+      success: result.success,
+      message: result.message,
+      match: result.match
+    });
     
     return NextResponse.json(result);
   } catch (error) {

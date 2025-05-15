@@ -10,7 +10,14 @@ export async function GET(
   try {
     const { userAddress } = params;
     
+    console.debug('Retrieving match notifications', { user: userAddress });
+    
     const notifications = intentService.getMatchNotifications(userAddress);
+    
+    console.debug('Retrieved match notifications', {
+      user: userAddress,
+      count: notifications.length
+    });
     
     return NextResponse.json({
       success: true,

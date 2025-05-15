@@ -1,7 +1,7 @@
 import { createPublicClient, http, createWalletClient } from 'viem';
 import { sepolia } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
-import { keccak256, encodePacked, hashMessage, hexToNumber } from 'viem';
+import { keccak256, encodePacked, hashMessage, hexToBigInt, hexToString, hexToNumber} from 'viem';
 
 export interface Deposit {
   userAddress: string;
@@ -17,13 +17,15 @@ interface Balances {
 }
 
 export class ContractService {
+  private static instance: ContractService;
   private client;
   private walletClient;
   private deposits: Deposit[] = [];
   private balances: Balances = {};
   private privateKey: string;
+  private isInitialized = false;
 
-  constructor() {
+  private constructor() {
     const rawPrivateKey = process.env.TEE_PRIVATE_KEY;
     if (!rawPrivateKey) {
       throw new Error('TEE_PRIVATE_KEY environment variable is not set');
@@ -43,13 +45,26 @@ export class ContractService {
       chain: sepolia,
       transport: http(process.env.RPC_URL),
     });
+  }
 
-    this.startDepositListener();
+  public static getInstance(): ContractService {
+    if (!ContractService.instance) {
+      ContractService.instance = new ContractService();
+    }
+    return ContractService.instance;
   }
 
   private async getEventTimestamp(blockNumber: bigint): Promise<number> {
     const block = await this.client.getBlock({ blockNumber });
     return Number(block.timestamp);
+  }
+
+  public async initialize() {
+    if (this.isInitialized) return;
+    
+    console.log('Initializing ContractService');
+    await this.startDepositListener();
+    this.isInitialized = true;
   }
 
   private async startDepositListener() {
@@ -83,7 +98,7 @@ export class ContractService {
             this.balances[deposit.userAddress] = {};
           }
           if (!this.balances[deposit.userAddress][deposit.token]) {
-            this.balances[deposit.userAddress][deposit.token] = 0n;
+            this.balances[deposit.userAddress][deposit.token] = BigInt(0);
           }
           this.balances[deposit.userAddress][deposit.token] += deposit.amount;
           
@@ -109,7 +124,7 @@ export class ContractService {
   }
 
   getUserBalance(userAddress: string, token: string): bigint {
-    const balance = this.balances[userAddress]?.[token] || 0n;
+    const balance = this.balances[userAddress]?.[token] || BigInt(0);
     console.debug(`Retrieved balance for user ${userAddress}, token ${token}: ${balance.toString()}`);
     return balance;
   }
@@ -118,7 +133,7 @@ export class ContractService {
     if (!this.balances[userAddress]) {
       this.balances[userAddress] = {};
     }
-    const oldBalance = this.balances[userAddress][token] || 0n;
+    const oldBalance = this.balances[userAddress][token] || BigInt(0);
     this.balances[userAddress][token] = newBalance;
     
     console.debug(`Updated balance for user ${userAddress}, token ${token}`, {
@@ -130,7 +145,7 @@ export class ContractService {
   async withdrawTokensWithSignature(userAddress: string, token: string): Promise<{ success: boolean; message: string }> {
     try {
       const amount = this.getUserBalance(userAddress, token);
-      if (amount <= 0n) {
+      if (amount <= BigInt(0)) {
         console.warn(`Withdrawal attempted with insufficient balance`, {
           user: userAddress,
           token,
@@ -196,15 +211,16 @@ export class ContractService {
         success: true,
         message: `Withdrawal successful. Transaction hash: ${hash}`
       };
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       console.error(`Withdrawal failed`, {
-        error: error.message,
+        error: errorMessage,
         user: userAddress,
         token
       });
       return {
         success: false,
-        message: `Withdrawal failed: ${error.message}`
+        message: `Withdrawal failed: ${errorMessage}`
       };
     }
   }
