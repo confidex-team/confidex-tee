@@ -1,0 +1,26 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.33kB done
+#1 DONE 0.5s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 45B done
+#2 DONE 0.5s
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 DONE 0.4s
+
+#4 [build 1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#4 DONE 0.0s
+
+#5 [runner 2/8] WORKDIR /app
+#5 CACHED
+
+#6 [runner 3/8] RUN addgroup --system --gid 1001 nodejs
+#6 CACHED
+
+#7 [runner 4/8] RUN adduser --system --uid 1001 nextjs
+#7 CACHED
+
+#8 [internal] load build context

@@ -1,0 +1,44 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 45B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.33kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 DONE 0.4s
+
+#4 [build 1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#4 DONE 0.0s
+
+#5 [runner 3/8] RUN addgroup --system --gid 1001 nodejs
+#5 CACHED
+
+#6 [runner 2/8] WORKDIR /app
+#6 CACHED
+
+#7 [runner 4/8] RUN adduser --system --uid 1001 nextjs
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 485.46MB 4.6s
+#8 transferring context: 662.38MB 7.2s done
+#8 DONE 7.3s
+
+#9 [build 2/7] RUN apk update && apk add --no-cache libc6-compat
+#9 CACHED
+
+#10 [build 3/7] WORKDIR /app
+#10 CACHED
+
+#11 [build 4/7] COPY package.json yarn.lock ./
+#11 CACHED
+
+#12 [build 5/7] RUN yarn
+#12 2.173 yarn install v1.22.22
+#12 2.634 [1/4] Resolving packages...
+#12 7.134 [2/4] Fetching packages...
+#12 116.6 info There appears to be trouble with your network connection. Retrying...

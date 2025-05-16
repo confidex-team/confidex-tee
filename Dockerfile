@@ -1,7 +1,7 @@
 # Install dependencies only when needed
 FROM node:18-alpine AS build
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+RUN apk update && apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -9,11 +9,20 @@ COPY package.json yarn.lock ./
 
 RUN yarn
 
-# Copy .env file first
-COPY .env ./
-
 # Copy the rest of the application
 COPY . .
+
+# Add build arguments
+ARG TEE_PRIVATE_KEY
+ARG RPC_URL
+ARG CONFIDEX_CONTRACT
+ARG PHALA_API_KEY
+
+# Set environment variables for build
+ENV TEE_PRIVATE_KEY=${TEE_PRIVATE_KEY}
+ENV RPC_URL=${RPC_URL}
+ENV CONFIDEX_CONTRACT=${CONFIDEX_CONTRACT}
+ENV PHALA_API_KEY=${PHALA_API_KEY}
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -40,7 +49,6 @@ RUN adduser --system --uid 1001 nextjs
 # You only need to copy next.config.js if you are NOT using the default configuration
 COPY --from=build /app/next.config.mjs ./
 COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/.env ./.env
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
