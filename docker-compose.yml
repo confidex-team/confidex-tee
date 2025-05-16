@@ -1,8 +1,23 @@
+version: "3.8"
+
 services:
   app:
-    image: leechael/phala-cloud-nextjs-starter:latest
-    container_name: app
+    build: .
     ports:
       - "3000:3000"
+    environment:
+      - DSTACK_SIMULATOR_ENDPOINT=/tmp/tappd.sock
+      - TEE_ENABLED=true
+      - TEE_PRIVATE_KEY=${TEE_PRIVATE_KEY}
+      - RPC_URL=${RPC_URL}
+      - CONFIDEX_CONTRACT=${CONFIDEX_CONTRACT}
     volumes:
-      - /var/run/tappd.sock:/var/run/tappd.sock
+      - /tmp/tappd.sock:/tmp/tappd.sock
+    depends_on:
+      - tee-simulator
+
+  tee-simulator:
+    image: leechael/tappd-simulator:latest
+    volumes:
+      - /tmp/tappd.sock:/tmp/tappd.sock
+    command: -l unix:/tmp/tappd.sock
